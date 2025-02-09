@@ -1,24 +1,38 @@
+<?php
+// Get the current page name (e.g., "dashboard.php")
+$current_page = basename($_SERVER['PHP_SELF']);
+?>
 <div class="topbar">
-    <div class="topbar-left">
-        <span class="text-white">System Logo</span>
+    <!-- Sidebar Toggle Button -->
+    <button id="toggleSidebar" style="background: none; border: none; color: white; font-size: 1.5rem; margin-right: 15px; cursor: pointer;">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Logo and System Title -->
+    <div style="flex-grow: 1; display: flex; align-items: center;">
+        <img src="../dist/img/logo.png" alt="System Logo" style="height: 40px; margin-right: 10px;">
+        <span style="font-size: 1.25rem;">Bodhitree Group Tax Invoice System</span>
     </div>
-    <div class="topbar-right">
-        <div class="notifications">
-            <i class="fas fa-bell bell-icon"></i>
-            <div class="notification-dropdown d-none bg-white shadow rounded">
-                <ul class="list-group">
-                    <?php if (isset($notifications) && count($notifications) > 0): ?>
-                        <?php foreach ($notifications as $notification): ?>
-                            <li class="list-group-item">
-                                <?php echo htmlspecialchars($notification['message']); ?>
-                            </li>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <li class="list-group-item">No new notifications.</li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-        </div>
-        <span class="text-white ml-3"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+
+    <!-- User Account Menu -->
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="accountMenu" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-user-circle"></i> <?php echo $_SESSION['username']; ?>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountMenu">
+            <li><a class="dropdown-item" href="../staff/account.php"><i class="fas fa-user"></i> My Account</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="../logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
     </div>
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <h2 class="text-center" style="font-size: 1.1rem; margin-bottom: 20px;"> Welcome, <?php echo $_SESSION['username']; ?>!</h2>
+    <a href="../staff/dashboard.php" class="<?php echo $current_page == 'dashboard.php' ? 'active' : ''; ?>"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+    <a href="../staff/upload_invoice.php" class="<?php echo $current_page == 'upload_invoice.php' ? 'active' : ''; ?>"><i class="fa-solid fa-file-arrow-up"></i> Upload New Tax Invoice</a>
+    <a href="../staff/pending_requests.php" class="<?php echo $current_page == 'pending_requests.php' ? 'active' : ''; ?>"><i class="fa-solid fa-clock-rotate-left"></i> Pending Requests</a>
+    <a href="../staff/all_records.php" class="<?php echo $current_page == 'all_records.php' ? 'active' : ''; ?>"><i class="fa-solid fa-folder-open"></i> My Records</a>
+    <a href="../logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
 </div>

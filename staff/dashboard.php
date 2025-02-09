@@ -1,32 +1,72 @@
 <?php
 session_start();
+if (!isset($_SESSION['role']) || $_SESSION['role'] != 'staff') {
+    header("Location: ../login.php");
+    exit;
+}
+
+$pageTitle = "Staff Dashboard";
+
+// Include database connection
 require_once '../config.php';
 
-// Fetch staff notifications
-$stmt = $conn->prepare("SELECT * FROM notifications WHERE staff_id = ? ORDER BY created_at DESC LIMIT 5");
-$stmt->bind_param("i", $_SESSION['staff_id']);
-$stmt->execute();
-$result = $stmt->get_result();
-$notifications = $result->fetch_all(MYSQLI_ASSOC);
+// Get logged-in staff ID
+$staff_id = $_SESSION['user_id'];
 
-include '../includes/head.php';
-include '../includes/header.php';
+// Fetch counts for dashboard tiles
+$pending_count = $conn->query("SELECT COUNT(*) as count FROM invoice_list WHERE approval_status = 'Pending' AND staff_id = $staff_id")->fetch_assoc()['count'];
+$approved_count = $conn->query("SELECT COUNT(*) as count FROM invoice_list WHERE approval_status = 'Approved' AND staff_id = $staff_id")->fetch_assoc()['count'];
+$denied_count = $conn->query("SELECT COUNT(*) as count FROM invoice_list WHERE approval_status = 'Denied' AND staff_id = $staff_id")->fetch_assoc()['count'];
+$total_count = $conn->query("SELECT COUNT(*) as count FROM invoice_list WHERE staff_id = $staff_id")->fetch_assoc()['count'];
 ?>
 
-<div class="d-flex">
-    <nav class="sidebar bg-dark" style="width: 250px;">
-        <ul class="nav flex-column">
-            <li class="nav-item"><a class="nav-link text-white" href="dashboard.php">Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="upload_invoice.php">Upload Invoice</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="pending_requests.php">Pending Requests</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="approved_requests.php">Approved</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="../logout.php">Logout</a></li>
-        </ul>
-    </nav>
+<?php include '../includes/head.php'; ?>
+<?php include '../includes/header.php'; ?>
 
-    <main class="content flex-grow-1 p-4">
-        <h1>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1>
-    </main>
+<div class="content">
+    <div class="container mt-4">
+        <h1>Dashboard</h1>
+        <p>This is your staff dashboard. Below are the counts for your tax invoice records.</p>
+
+        <!-- Dashboard Tiles -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Pending Tax Invoices</h5>
+                        <p class="card-text fs-3"><?php echo $pending_count; ?></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Approved Tax Invoices</h5>
+                        <p class="card-text fs-3"><?php echo $approved_count; ?></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-danger mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Rejected Tax Invoices</h5>
+                        <p class="card-text fs-3"><?php echo $denied_count; ?></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-secondary mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">All Tax Invoices</h5>
+                        <p class="card-text fs-3"><?php echo $total_count; ?></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Button to Navigate to Records Page -->
+        <a href="all_records.php" class="btn btn-primary mt-4">View All Records</a>
+    </div>
 </div>
 
 <?php include '../includes/footer.php'; ?>

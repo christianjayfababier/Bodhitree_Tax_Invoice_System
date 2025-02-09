@@ -1,5 +1,6 @@
-<footer class="footer bg-dark text-white text-center py-3">
-    &copy; 2025 BTG-TIS. All rights reserved.
-</footer>
 </body>
+<!-- Bootstrap Bundle JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Custom JavaScript -->
+<script src="../dist/js/scripts.js"></script>
 </html>
