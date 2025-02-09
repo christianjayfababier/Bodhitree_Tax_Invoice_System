@@ -31,7 +31,8 @@ $result = $query->get_result();
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th>#</th>
+                <th>TX ID</th>
+                <th>Status</th>
                 <th>Invoice Number</th>
                 <th>Invoice Type</th>
                 <th>Priority</th>
@@ -45,6 +46,15 @@ $result = $query->get_result();
                 <?php while ($row = $result->fetch_assoc()): ?>
                     <tr>
                         <td><?php echo $row['id']; ?></td>
+                        <td>
+                            <?php if ($row['approval_status'] == 'Pending'): ?>
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            <?php elseif ($row['approval_status'] == 'Approved'): ?>
+                                <span class="badge bg-success">Approved</span>
+                            <?php elseif ($row['approval_status'] == 'Denied'): ?>
+                                <span class="badge bg-danger">Denied</span>
+                            <?php endif; ?>
+                        </td>
                         <td><?php echo htmlspecialchars($row['tax_invoice_number']); ?></td>
                         <td><?php echo htmlspecialchars($row['invoice_type']); ?></td>
                         <td><?php echo htmlspecialchars($row['priority']); ?></td>

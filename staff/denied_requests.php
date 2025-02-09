@@ -10,13 +10,13 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'staff') {
 
 // Fetch approved invoices for the logged-in staff
 $staff_id = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT * FROM invoice_list WHERE staff_id = ? AND approval_status = 'Approved'");
+$stmt = $conn->prepare("SELECT * FROM invoice_list WHERE staff_id = ? AND approval_status = 'Denied'");
 $stmt->bind_param("i", $staff_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $invoices = $result->fetch_all(MYSQLI_ASSOC);
 
-$current_page = "approved_requests"; // Highlight the active menu
+$current_page = "denied_requests"; // Highlight the active menu
 ?>
 
 <?php include '../includes/head.php'; ?>
@@ -24,7 +24,7 @@ $current_page = "approved_requests"; // Highlight the active menu
 
 <div class="content">
     <div class="container mt-4">
-        <h1>Approved Invoices</h1>
+        <h1>Denied Invoices</h1>
         <?php if (!empty($invoices)): ?>
             <table class="table table-bordered">
                 <thead>
@@ -37,21 +37,21 @@ $current_page = "approved_requests"; // Highlight the active menu
                     <th>Admins Remark</th>
                     <th>Signed Admin</th>
                     <th>Date Signed</th>
-                    <td><i class="fa-solid fa-square-check " style="color:green"></i></td>
+                    <td><i class="fa-solid fa-square-xmark " style="color:red"></i></td>
                 </tr>
                 </thead>
                 <tbody>
                 <?php foreach ($invoices as $index => $invoice): ?>
                     <tr>
                         <td><?php echo $index + 1; ?>
-                        <td><span class="badge bg-success">Approved</span></td>
+                        <td><span class="badge bg-danger">Denied</span></td>
                         <td><?php echo htmlspecialchars($invoice['tax_invoice_number']); ?></td>
                         <td><?php echo htmlspecialchars($invoice['invoice_type']); ?></td>
                         <td><?php echo date('d M Y, H:i', strtotime($invoice['date_requested'])); ?></td>
                         <td><?php echo htmlspecialchars($invoice['review_notes']); ?></td>
                         <td><?php echo htmlspecialchars($invoice['admin_reviewer_name']); ?></td>
                         <td><?php echo htmlspecialchars($invoice['date_updated']); ?></td>
-                        <td><i class="fa-solid fa-square-check" style="color:green"></i></td>
+                        <td><i class="fa-solid fa-square-xmark" style="color:red"></i></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>

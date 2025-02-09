@@ -33,6 +33,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <a href="../staff/dashboard.php" class="<?php echo $current_page == 'dashboard.php' ? 'active' : ''; ?>"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
     <a href="../staff/upload_invoice.php" class="<?php echo $current_page == 'upload_invoice.php' ? 'active' : ''; ?>"><i class="fa-solid fa-file-arrow-up"></i> Upload New Tax Invoice</a>
     <a href="../staff/pending_requests.php" class="<?php echo $current_page == 'pending_requests.php' ? 'active' : ''; ?>"><i class="fa-solid fa-clock-rotate-left"></i> Pending Requests</a>
+    <a href="../staff/approved_requests.php" class="nav-link <?php echo ($current_page == 'approved_requests') ? 'active' : ''; ?>" ><i class="fa-solid fa-square-check"></i> Approved Requests</a>
+    <a href="../staff/denied_requests.php" class="nav-link <?php echo ($current_page == 'denied_requests') ? 'active' : ''; ?>" ><i class="fa-solid fa-circle-xmark"></i> Denied Requests</a>
     <a href="../staff/all_records.php" class="<?php echo $current_page == 'all_records.php' ? 'active' : ''; ?>"><i class="fa-solid fa-folder-open"></i> My Records</a>
     <a href="../logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
 </div>

@@ -73,7 +73,7 @@ $result = $conn->query($query);
             <tbody>
             <?php while ($row = $result->fetch_assoc()): ?>
                 <tr>
-                    <td><?php echo $row['id']; ?></td>
+                    <td ><?php echo $row['id']; ?></td>
                     <td>
                         <?php if ($row['approval_status'] == 'Pending'): ?>
                             <span class="badge bg-warning text-dark">Pending</span>
@@ -85,7 +85,29 @@ $result = $conn->query($query);
                     </td>
                     <td><?php echo htmlspecialchars($row['tax_invoice_number']); ?></td>
                     <td><?php echo htmlspecialchars($row['invoice_type']); ?></td>
-                    <td><?php echo htmlspecialchars($row['priority']); ?></td>
+                    <td style="text-align: center">
+                        <?php if ($row['priority'] == 'Low'): ?>
+                            <span style="font-size: .8em;">Low</span>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        <?php elseif ($row['priority'] == 'Medium'): ?>
+                            <span style="font-size: .8em;">Medium</span>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        <?php elseif ($row['priority'] == 'High'): ?>
+                            <span style="font-size: .8em;">High</span>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        <?php elseif ($row['priority'] == 'Urgent'): ?>
+                            <span style="font-size: .8em;">Urgent</span>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        <?php endif; ?>
+                    </td>
                     <td><?php echo htmlspecialchars($row['notes']); ?></td>
                     <td><?php echo date("Y-m-d H:i", strtotime($row['date_requested'])); ?></td>
                     <td><?php echo htmlspecialchars($row['review_notes']); ?></td>
