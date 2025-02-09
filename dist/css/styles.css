@@ -1,3 +1,14 @@
+/* Reset margins and paddings for the whole page */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* Ensure full height */
+    width: 100%; /* Ensure full width */
+    box-sizing: border-box;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+
 /* Sidebar Styling */
 .sidebar {
     width: 250px;
@@ -5,7 +16,8 @@
     color: white;
     height: 100vh;
     position: fixed;
-    padding-top: 20px;
+    padding-top: 50px;
+    margin-top:60px;
 }
 
 .sidebar a {
@@ -34,6 +46,10 @@
     display: flex;
     align-items: center;
     padding: 0 15px;
+    position:fixed;
+    top:0;
+    width: 100%;
+
 }
 
 /* User Dropdown Styling */
@@ -51,7 +67,12 @@
 }
 
 
+/* Content Area Styling */
 .content {
-    margin-left: 250px;
+    margin-left: 250px; /* Leave space for the sidebar */
+    margin-top: 60px; /* Leave space for the topbar */
     padding: 20px;
+    min-height: calc(100% - 60px); /* Ensure content fills remaining height */
+    background-color: #f8f9fa; /* Light background for content */
+    box-sizing: border-box; /* Include padding in width/height calculations */
 }
