@@ -1,67 +1,55 @@
 <?php
 session_start();
+require_once '../config.php';
+
+// Ensure the user is logged in and is an admin
 if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
     header("Location: ../login.php");
     exit;
 }
 
-require_once '../config.php';
-
-// Get Invoice ID
+// Get the invoice details
 $invoice_id = $_GET['id'] ?? null;
-
 if (!$invoice_id) {
+    $_SESSION['error'] = "Invoice ID is required.";
     header("Location: request_list.php");
     exit;
 }
 
-// Fetch Invoice Details
-$query = $conn->prepare("SELECT * FROM invoice_list WHERE id = ?");
-$query->bind_param("i", $invoice_id);
-$query->execute();
-$result = $query->get_result();
+$stmt = $conn->prepare("SELECT * FROM invoice_list WHERE id = ?");
+$stmt->bind_param("i", $invoice_id);
+$stmt->execute();
+$result = $stmt->get_result();
 $invoice = $result->fetch_assoc();
 
 if (!$invoice) {
+    $_SESSION['error'] = "Invoice not found.";
     header("Location: request_list.php");
     exit;
 }
-
-// Handle Form Submission
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $status = $_POST['status'];
-    $admin_note = $_POST['admin_note'];
-    $admin_name = $_SESSION['username']; // Admin username from session
-
-    // Update query
-    $update_query = $conn->prepare("UPDATE invoice_list SET approval_status = ?, review_notes = ?, admin_reviewer_name = ? WHERE id = ?");
-    $update_query->bind_param("sssi", $status, $admin_note, $admin_name, $invoice_id);
-
-    if ($update_query->execute()) {
-        $_SESSION['message'] = "Invoice updated successfully.";
-        header("Location: request_list.php");
-        exit;
-    } else {
-        $error = "Failed to update invoice. Please try again.";
-    }
-}
 ?>
 
-<?php include 'includes/head.php'; ?>
-<?php include 'includes/header.php'; ?>
+<?php include '../includes/head.php'; ?>
+<?php include '../includes/header.php'; ?>
 
 <div class="content">
     <div class="container mt-4">
         <h1>Review Invoice</h1>
 
-        <?php if (isset($error)): ?>
-            <div class="alert alert-danger"><?php echo $error; ?></div>
+        <?php if (!empty($_SESSION['error'])): ?>
+            <div class="alert alert-danger"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
         <?php endif; ?>
 
-        <form method="POST">
+        <?php if (!empty($_SESSION['success'])): ?>
+            <div class="alert alert-success"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
+        <?php endif; ?>
+
+        <form method="POST" action="../controller/update_invoice_status.php">
+            <input type="hidden" name="invoice_id" value="<?php echo $invoice['id']; ?>">
+
             <div class="mb-3">
-                <label for="invoiceNumber" class="form-label">Invoice Number</label>
-                <input type="text" class="form-control" id="invoiceNumber" value="<?php echo htmlspecialchars($invoice['tax_invoice_number']); ?>" readonly>
+                <label for="taxInvoiceNumber" class="form-label">Tax Invoice Number</label>
+                <input type="text" class="form-control" id="taxInvoiceNumber" value="<?php echo htmlspecialchars($invoice['tax_invoice_number']); ?>" readonly>
             </div>
 
             <div class="mb-3">
@@ -75,25 +63,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
 
             <div class="mb-3">
-                <label for="status" class="form-label">Status</label>
-                <select name="status" id="status" class="form-select" required>
-                    <option value="Pending" <?php echo $invoice['approval_status'] == 'Pending' ? 'selected' : ''; ?>>Pending</option>
-                    <option value="Approved" <?php echo $invoice['approval_status'] == 'Approved' ? 'selected' : ''; ?>>Approved</option>
-                    <option value="Denied" <?php echo $invoice['approval_status'] == 'Denied' ? 'selected' : ''; ?>>Denied</option>
-                    <option value="Cancelled" <?php echo $invoice['approval_status'] == 'Cancelled' ? 'selected' : ''; ?>>Cancelled</option>
-                    <option value="Further Review" <?php echo $invoice['approval_status'] == 'Further Review' ? 'selected' : ''; ?>>Further Review</option>
+                <label for="approvalStatus" class="form-label">Status</label>
+                <select name="approval_status" id="approvalStatus" class="form-select">
+                    <option value="Pending" <?php echo $invoice['approval_status'] === 'Pending' ? 'selected' : ''; ?>>Pending</option>
+                    <option value="Approved" <?php echo $invoice['approval_status'] === 'Approved' ? 'selected' : ''; ?>>Approved</option>
+                    <option value="Denied" <?php echo $invoice['approval_status'] === 'Denied' ? 'selected' : ''; ?>>Denied</option>
+                    <option value="Further Review" <?php echo $invoice['approval_status'] === 'Further Review' ? 'selected' : ''; ?>>Further Review</option>
+                    <option value="Cancelled" <?php echo $invoice['approval_status'] === 'Cancelled' ? 'selected' : ''; ?>>Cancelled</option>
                 </select>
             </div>
 
             <div class="mb-3">
-                <label for="adminNote" class="form-label">Admin Note</label>
-                <textarea name="admin_note" id="adminNote" class="form-control" rows="5"><?php echo htmlspecialchars($invoice['review_notes']); ?></textarea>
+                <label for="reviewNotes" class="form-label">Admin Note</label>
+                <textarea name="review_notes" id="reviewNotes" class="form-control" rows="5"><?php echo htmlspecialchars($invoice['review_notes']); ?></textarea>
             </div>
 
-            <div class="mb-3">
-                <label for="verifiedBy" class="form-label">Verified By (Admin)</label>
-                <input type="text" class="form-control" id="verifiedBy" value="<?php echo htmlspecialchars($_SESSION['username']); ?>" readonly>
-            </div>
+            <?php if (!empty($invoice['admin_reviewer_name']) && $invoice['approval_status'] !== 'Pending'): ?>
+                <div class="mb-3">
+                    <label for="verifiedBy" class="form-label">Verified By (Admin)</label>
+                    <input type="text" class="form-control" id="verifiedBy" value="<?php echo htmlspecialchars($invoice['admin_reviewer_name']); ?>" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="dateReviewed" class="form-label">Date Reviewed</label>
+                    <input type="text" class="form-control" id="dateReviewed" value="<?php echo htmlspecialchars($invoice['date_updated']); ?>" readonly>
+                </div>
+            <?php endif; ?>
 
             <div class="mb-3">
                 <label for="pdfInvoice" class="form-label">PDF Invoice</label>
@@ -110,4 +104,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 </div>
 
-<?php include 'includes/footer.php'; ?>
+<?php include '../includes/footer.php'; ?>

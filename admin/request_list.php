@@ -59,12 +59,14 @@ $result = $conn->query($query);
             <thead>
             <tr>
                 <th>TX ID</th>
+                <th>Status</th>
                 <th>Invoice Number</th>
                 <th>Invoice Type</th>
-                <th>Status</th>
                 <th>Priority</th>
-                <th>Admins Remark</th>
+                <th>Staff Note</th>
                 <th>Date Submitted</th>
+                <th>Admins Remark</th>
+                <th>Signed Admin</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -72,8 +74,6 @@ $result = $conn->query($query);
             <?php while ($row = $result->fetch_assoc()): ?>
                 <tr>
                     <td><?php echo $row['id']; ?></td>
-                    <td><?php echo htmlspecialchars($row['tax_invoice_number']); ?></td>
-                    <td><?php echo htmlspecialchars($row['invoice_type']); ?></td>
                     <td>
                         <?php if ($row['approval_status'] == 'Pending'): ?>
                             <span class="badge bg-warning text-dark">Pending</span>
@@ -83,9 +83,13 @@ $result = $conn->query($query);
                             <span class="badge bg-danger">Denied</span>
                         <?php endif; ?>
                     </td>
+                    <td><?php echo htmlspecialchars($row['tax_invoice_number']); ?></td>
+                    <td><?php echo htmlspecialchars($row['invoice_type']); ?></td>
                     <td><?php echo htmlspecialchars($row['priority']); ?></td>
-                    <td><?php echo htmlspecialchars($row['review_notes']); ?></td>
+                    <td><?php echo htmlspecialchars($row['notes']); ?></td>
                     <td><?php echo date("Y-m-d H:i", strtotime($row['date_requested'])); ?></td>
+                    <td><?php echo htmlspecialchars($row['review_notes']); ?></td>
+                    <td><?php echo htmlspecialchars($row['admin_reviewer_name']); ?></td>
                     <td>
                         <a href="review_invoice.php?id=<?php echo $row['id']; ?>" class="btn btn-primary btn-sm">Review</a>
                     </td>

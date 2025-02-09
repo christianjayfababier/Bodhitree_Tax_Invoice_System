@@ -63,13 +63,14 @@ $result = $conn->query($query);
             <thead>
             <tr>
                 <th>TX ID</th>
+                <th>Priority</th>
                 <th>Invoice Number</th>
                 <th>Invoice Type</th>
-                <th>Priority</th>
+                <th>Staff Notes</th>
                 <th>Status</th>
                 <th>Date Submitted</th>
-                <th>Staff Notes</th>
                 <th>Admins Remark</th>
+                <th>Signed Admin</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -78,9 +79,6 @@ $result = $conn->query($query);
                 <?php while ($row = $result->fetch_assoc()): ?>
                     <tr>
                         <td><?php echo $row['id']; ?></td>
-                        <td><?php echo htmlspecialchars($row['tax_invoice_number']); ?></td>
-                        <td><?php echo htmlspecialchars($row['invoice_type']); ?></td>
-                        <td><?php echo htmlspecialchars($row['priority']); ?></td>
                         <td>
                             <?php if ($row['approval_status'] == 'Pending'): ?>
                                 <span class="badge bg-warning text-dark">Pending</span>
@@ -90,9 +88,13 @@ $result = $conn->query($query);
                                 <span class="badge bg-danger">Denied</span>
                             <?php endif; ?>
                         </td>
-                        <td><?php echo date("Y-m-d H:i", strtotime($row['date_requested'])); ?></td>
+                        <td><?php echo htmlspecialchars($row['tax_invoice_number']); ?></td>
+                        <td><?php echo htmlspecialchars($row['invoice_type']); ?></td>
+                        <td><?php echo htmlspecialchars($row['priority']); ?></td>
                         <td><?php echo htmlspecialchars($row['notes']); ?></td>
+                        <td><?php echo date("Y-m-d H:i", strtotime($row['date_requested'])); ?></td>
                         <td><?php echo htmlspecialchars($row['review_notes']); ?></td>
+                        <td><?php echo htmlspecialchars($row['admin_reviewer_name']); ?></td>
                         <td>
                             <a href="../dist/invoices/<?php echo $row['pdf_invoice_path']; ?>" class="btn btn-primary btn-sm" target="_blank">View</a>
                         </td>
