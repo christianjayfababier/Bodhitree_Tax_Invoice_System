@@ -3,14 +3,10 @@
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <div class="topbar">
-    <!-- Sidebar Toggle Button -->
-    <button id="toggleSidebar" style="background: none; border: none; color: white; font-size: 1.5rem; margin-right: 15px; cursor: pointer;">
-        <i class="fas fa-bars"></i>
-    </button>
 
     <!-- Logo and System Title -->
     <div style="flex-grow: 1; display: flex; align-items: center;">
-        <img src="../dist/img/logo.png" alt="System Logo" style="height: 40px; margin-right: 10px;">
+<!--        <img src="../dist/img/logo.png" alt="System Logo" style="height: 40px; margin-right: 10px;">-->
         <span style="font-size: 1.25rem;">Bodhitree Group Tax Invoice System</span>
     </div>
 
@@ -29,7 +25,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 <!-- Sidebar -->
 <div class="sidebar">
-    <h2 class="text-center" style="font-size: 1.1rem; margin-bottom: 20px;"> Welcome, <?php echo $_SESSION['username']; ?>!</h2>
+    <h2 class="text-center" style="font-size: 1.1rem;"> Welcome, <?php echo $_SESSION['username']; ?>!</h2>
+    <h6 class="text-center" style="font-size: 0.8rem;margin-bottom: 20px"><?php echo "Today is " . date("l");?> <?php echo date("Y-m-d");?></h6>
     <a href="../staff/dashboard.php" class="<?php echo $current_page == 'dashboard.php' ? 'active' : ''; ?>"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
     <a href="../staff/upload_invoice.php" class="<?php echo $current_page == 'upload_invoice.php' ? 'active' : ''; ?>"><i class="fa-solid fa-file-arrow-up"></i> Upload New Tax Invoice</a>
     <a href="../staff/pending_requests.php" class="<?php echo $current_page == 'pending_requests.php' ? 'active' : ''; ?>"><i class="fa-solid fa-clock-rotate-left"></i> Pending Requests</a>

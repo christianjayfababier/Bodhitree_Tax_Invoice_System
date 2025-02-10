@@ -11,6 +11,11 @@ require_once '../config.php';
 // Filters
 $status_filter = $_GET['status'] ?? '';
 $search_query = $_GET['search'] ?? '';
+$date_filter = $_GET['date_filter'] ?? '';
+
+// Sorting
+$sort_order = $_GET['sort'] ?? 'DESC'; // Default to newest-first
+$sort_icon = $sort_order === 'DESC' ? '🔽' : '🔼'; // Toggle icon
 
 // Build query with filters
 $query = "SELECT * FROM invoice_list WHERE 1";
@@ -23,6 +28,12 @@ if (!empty($search_query)) {
     $query .= " AND (tax_invoice_number LIKE '%$search_query%' OR invoice_type LIKE '%$search_query%')";
 }
 
+if (!empty($date_filter)) {
+    $query .= " AND DATE(date_requested) = '$date_filter'";
+}
+
+// Add sorting
+$query .= " ORDER BY date_requested $sort_order";
 $result = $conn->query($query);
 ?>
 
@@ -36,7 +47,7 @@ $result = $conn->query($query);
         <!-- Filter Form -->
         <form method="GET" class="mb-4">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <select name="status" class="form-select">
                         <option value="">All Statuses</option>
                         <option value="Pending" <?php echo $status_filter == 'Pending' ? 'selected' : ''; ?>>Pending</option>
@@ -49,6 +60,9 @@ $result = $conn->query($query);
                     <input type="text" name="search" class="form-control" placeholder="Search by Invoice Number or Type" value="<?php echo htmlspecialchars($search_query); ?>">
                 </div>
                 <div class="col-md-2">
+                    <input type="date" name="date_filter" class="form-control" value="<?php echo htmlspecialchars($_GET['date_filter'] ?? ''); ?>">
+                </div>
+                <div class="col-md-2">
                     <button type="submit" class="btn btn-primary w-100">Filter</button>
                 </div>
             </div>
@@ -56,15 +70,19 @@ $result = $conn->query($query);
 
         <!-- Request Table -->
         <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>TX ID</th>
+            <thead style="background-color: #335E53; color: #f8f9fa">
+            <tr style="font-size: 0.7em">
+
                 <th>Status</th>
                 <th>Invoice Number</th>
                 <th>Invoice Type</th>
                 <th>Priority</th>
                 <th>Staff Note</th>
-                <th>Date Submitted</th>
+                <th>
+                    <a href="?<?php echo http_build_query(array_merge($_GET, ['sort' => $sort_order === 'DESC' ? 'ASC' : 'DESC'])); ?>">
+                        Date Submitted <?php echo $sort_icon; ?>
+                    </a>
+                </th>
                 <th>Admins Remark</th>
                 <th>Signed Admin</th>
                 <th>Actions</th>
@@ -72,8 +90,7 @@ $result = $conn->query($query);
             </thead>
             <tbody>
             <?php while ($row = $result->fetch_assoc()): ?>
-                <tr>
-                    <td ><?php echo $row['id']; ?></td>
+                <tr style="font-size: 0.85em">
                     <td>
                         <?php if ($row['approval_status'] == 'Pending'): ?>
                             <span class="badge bg-warning text-dark">Pending</span>
@@ -85,29 +102,7 @@ $result = $conn->query($query);
                     </td>
                     <td><?php echo htmlspecialchars($row['tax_invoice_number']); ?></td>
                     <td><?php echo htmlspecialchars($row['invoice_type']); ?></td>
-                    <td style="text-align: center">
-                        <?php if ($row['priority'] == 'Low'): ?>
-                            <span style="font-size: .8em;">Low</span>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        <?php elseif ($row['priority'] == 'Medium'): ?>
-                            <span style="font-size: .8em;">Medium</span>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        <?php elseif ($row['priority'] == 'High'): ?>
-                            <span style="font-size: .8em;">High</span>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        <?php elseif ($row['priority'] == 'Urgent'): ?>
-                            <span style="font-size: .8em;">Urgent</span>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        <?php endif; ?>
-                    </td>
+                    <td><?php echo htmlspecialchars($row['priority']); ?></td>
                     <td><?php echo htmlspecialchars($row['notes']); ?></td>
                     <td><?php echo date("Y-m-d H:i", strtotime($row['date_requested'])); ?></td>
                     <td><?php echo htmlspecialchars($row['review_notes']); ?></td>

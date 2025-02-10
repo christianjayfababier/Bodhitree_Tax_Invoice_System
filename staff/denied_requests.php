@@ -22,44 +22,44 @@ $current_page = "denied_requests"; // Highlight the active menu
 <?php include '../includes/head.php'; ?>
 <?php include '../includes/header.php'; ?>
 
-<div class="content">
-    <div class="container mt-4">
-        <h1>Denied Invoices</h1>
-        <?php if (!empty($invoices)): ?>
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>TX ID</th>
-                    <th>Status</th>
-                    <th>Invoice Number</th>
-                    <th>Type</th>
-                    <th>Date Requested</th>
-                    <th>Admins Remark</th>
-                    <th>Signed Admin</th>
-                    <th>Date Signed</th>
-                    <td><i class="fa-solid fa-square-xmark " style="color:red"></i></td>
-                </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($invoices as $index => $invoice): ?>
+    <div class="content">
+        <div class="container mt-4">
+            <h1>Denied Invoices</h1>
+            <?php if (!empty($invoices)): ?>
+                <table class="table table-bordered">
+                    <thead>
                     <tr>
-                        <td><?php echo $index + 1; ?>
-                        <td><span class="badge bg-danger">Denied</span></td>
-                        <td><?php echo htmlspecialchars($invoice['tax_invoice_number']); ?></td>
-                        <td><?php echo htmlspecialchars($invoice['invoice_type']); ?></td>
-                        <td><?php echo date('d M Y, H:i', strtotime($invoice['date_requested'])); ?></td>
-                        <td><?php echo htmlspecialchars($invoice['review_notes']); ?></td>
-                        <td><?php echo htmlspecialchars($invoice['admin_reviewer_name']); ?></td>
-                        <td><?php echo htmlspecialchars($invoice['date_updated']); ?></td>
-                        <td><i class="fa-solid fa-square-xmark" style="color:red"></i></td>
+                        <th>TX ID</th>
+                        <th>Status</th>
+                        <th>Invoice Number</th>
+                        <th>Type</th>
+                        <th>Date Requested</th>
+                        <th>Admins Remark</th>
+                        <th>Signed Admin</th>
+                        <th>Date Signed</th>
+                        <td><i class="fa-solid fa-square-xmark " style="color:red"></i></td>
                     </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <p class="text-muted">No approved invoices found.</p>
-        <?php endif; ?>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($invoices as $index => $invoice): ?>
+                        <tr>
+                            <td><?php echo $index + 1; ?>
+                            <td><span class="badge bg-danger">Denied</span></td>
+                            <td><?php echo htmlspecialchars($invoice['tax_invoice_number']); ?></td>
+                            <td><?php echo htmlspecialchars($invoice['invoice_type']); ?></td>
+                            <td><?php echo date('d M Y, H:i', strtotime($invoice['date_requested'])); ?></td>
+                            <td><?php echo htmlspecialchars($invoice['review_notes']); ?></td>
+                            <td><?php echo htmlspecialchars($invoice['admin_reviewer_name']); ?></td>
+                            <td><?php echo htmlspecialchars($invoice['date_updated']); ?></td>
+                            <td><i class="fa-solid fa-square-xmark" style="color:red"></i></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p class="text-muted">No approved invoices found.</p>
+            <?php endif; ?>
+        </div>
     </div>
-</div>
 
 <?php include '../includes/footer.php'; ?>

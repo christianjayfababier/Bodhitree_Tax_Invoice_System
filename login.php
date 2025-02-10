@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($user['role'] == 'admin') {
             header("Location: admin/dashboard.php");
         } else {
-            header("Location: staff/upload_invoice.php");
+            header("Location: staff/dashboard.php");
         }
         exit;
     } else {
@@ -45,22 +45,67 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+
+        }
+        .logo {
+            display: block;
+            margin: 0 auto;
+
+        }
+    </style>
 </head>
 <body>
-<h2>Login</h2>
 
-<?php if (isset($error)): ?>
-    <p style="color: red;"><?php echo $error; ?></p>
-<?php endif; ?>
+<div class="login-container">
+    <div class="card shadow-lg" style="background-color: #335E53;color: #f8f9fa">
+        <div class="card-body">
 
-<form action="" method="POST">
-    <label for="username">Username:</label><br>
-    <input type="text" name="username" id="username" required><br><br>
+            <!-- Logo Image -->
+            <img src="dist/img/btg-logo-wt.png" alt="Logo" class="logo mb-3">
 
-    <label for="password">Password:</label><br>
-    <input type="password" name="password" id="password" required><br><br>
 
-    <button type="submit">Login</button>
-</form>
+            <h3 class="text-center mb-4">Login</h3>
+
+            <?php if (isset($error)): ?>
+                <div class="alert alert-danger text-center" role="alert">
+                    <?php echo $error; ?>
+                </div>
+            <?php endif; ?>
+
+            <form action="" method="POST">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" name="username" id="username" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="password" id="password" class="form-control" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100" style="background-color: seagreen">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
