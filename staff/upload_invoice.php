@@ -53,6 +53,7 @@ $pageTitle = "Upload Tax Invoice";
 
             <div class="mb-3">
                 <label for="invoice_type" class="form-label">Invoice Type</label>
+                <span  style="font-size: 0.8em; color: #335E53"><i>(Contact Chris for additional Invoice Types)</i></span>
                 <select class="form-select" id="invoice_type" name="invoice_type" required>
                     <option value="" disabled selected>Select Type</option>
                     <option value="House Cleaning Tax">House Cleaning Tax</option>

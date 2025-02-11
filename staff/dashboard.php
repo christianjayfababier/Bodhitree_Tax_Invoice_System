@@ -31,41 +31,45 @@ $total_count = $conn->query("SELECT COUNT(*) as count FROM invoice_list WHERE st
             <!-- Dashboard Tiles -->
             <div class="row">
                 <div class="col-md-3">
-                    <div class="card text-white bg-primary mb-3">
+                    <div class="card mb-3">
                         <div class="card-body">
                             <h5 class="card-title">Pending Tax Invoices</h5>
                             <p class="card-text fs-3"><?php echo $pending_count; ?></p>
+                            <a href="pending_requests.php" class="btn btn-primary mt-4">View Pending Records</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card text-white bg-success mb-3">
+                    <div class="card mb-3">
                         <div class="card-body">
                             <h5 class="card-title">Approved Tax Invoices</h5>
                             <p class="card-text fs-3"><?php echo $approved_count; ?></p>
+                            <a href="approved_requests.php" class="btn btn-primary mt-4">View Approved Records</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card text-white bg-danger mb-3">
+                    <div class="card mb-3">
                         <div class="card-body">
                             <h5 class="card-title">Rejected Tax Invoices</h5>
                             <p class="card-text fs-3"><?php echo $denied_count; ?></p>
+                            <a href="denied_requests.php" class="btn btn-primary mt-4">View Denied Records</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card text-white bg-secondary mb-3">
+                    <div class="card mb-3">
                         <div class="card-body">
                             <h5 class="card-title">All Tax Invoices</h5>
                             <p class="card-text fs-3"><?php echo $total_count; ?></p>
+                            <a href="all_records.php" class="btn btn-primary mt-4">View All Records</a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Button to Navigate to Records Page -->
-            <a href="all_records.php" class="btn btn-primary mt-4">View All Records</a>
+
+
         </div>
     </div>
 

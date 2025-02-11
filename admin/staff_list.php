@@ -23,10 +23,11 @@ $result = $conn->query("SELECT * FROM users WHERE role = 'staff'");
             <a href="add_staff.php" class="btn btn-primary mb-3">Add New Staff</a>
 
             <table class="table table-bordered">
-                <thead>
+                <thead style="background-color: #335E53; color: #f8f9fa">
                 <tr>
                     <th>#</th>
                     <th>Username</th>
+                    <th>Name</th>
                     <th>Email</th>
                     <th>Date Created</th>
                     <th>Actions</th>
@@ -37,6 +38,7 @@ $result = $conn->query("SELECT * FROM users WHERE role = 'staff'");
                     <tr>
                         <td><?php echo $row['id']; ?></td>
                         <td><?php echo htmlspecialchars($row['username']); ?></td>
+                        <td><?php echo htmlspecialchars($row['firstname'] ); ?> <?php echo htmlspecialchars($row['lastname'] ); ?></td>
                         <td><?php echo htmlspecialchars($row['email']); ?></td>
                         <td><?php echo date("Y-m-d", strtotime($row['created_at'])); ?></td>
                         <td>

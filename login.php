@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Custom CSS -->
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #284941;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -99,6 +99,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100" style="background-color: seagreen">Login</button>
+
+                <div class="mb-3" style="text-align: center;font-size: 0.65em"><br>
+                    <span style="text-align: center">This system is developed by Bodhitree Group IT. <br>If there are any problems in the system please report it to it@bodhitreegroup.com.au or chris@aliceshome.com.au </span>
+
+                </div>
             </form>
         </div>
     </div>

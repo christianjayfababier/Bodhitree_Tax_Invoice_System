@@ -27,10 +27,9 @@ $current_page = basename($_SERVER['PHP_SELF']); // Get current page name
     <h2 class="text-center" style="font-size: 1.1rem;"> Welcome, <?php echo $_SESSION['username']; ?>!</h2>
     <h6 class="text-center" style="font-size: 0.8rem;margin-bottom: 20px"><?php echo "Today is " . date("l");?> <?php echo date("Y-m-d");?></h6>
     <a href="dashboard.php" class="<?php echo $current_page == 'dashboard.php' ? 'active' : ''; ?>"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+     <a href="request_list.php" class="<?php echo $current_page == 'request_list.php' ? 'active' : ''; ?>"><i class="fas fa-file-alt"></i> All Request List</a>
     <a href="staff_list.php" class="<?php echo $current_page == 'staff_list.php' ? 'active' : ''; ?>"><i class="fas fa-users"></i> Staff List</a>
-    <a href="request_list.php" class="<?php echo $current_page == 'request_list.php' ? 'active' : ''; ?>"><i class="fas fa-file-alt"></i> All Request List</a>
     <a href="admin_list.php" class="<?php echo $current_page == 'admin_list.php' ? 'active' : ''; ?>"><i class="fas fa-user-shield"></i> Admin List</a>
     <a href="reports.php" class="<?php echo $current_page == 'reports.php' ? 'active' : ''; ?>"><i class="fas fa-chart-line"></i> Reports</a>
-    <a href="settings.php" class="<?php echo $current_page == 'settings.php' ? 'active' : ''; ?>"><i class="fas fa-cogs"></i> Settings</a>
-    <a href="../logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
+     <a href="../logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
 </div>

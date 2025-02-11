@@ -69,15 +69,16 @@ $result = $conn->query($query);
         </form>
 
         <!-- Request Table -->
-        <table class="table table-bordered">
+        <table class="table table-bordered" >
             <thead style="background-color: #335E53; color: #f8f9fa">
-            <tr style="font-size: 0.7em">
+            <tr style="font-size: 0.85em; vertical-align: middle;">
 
                 <th>Status</th>
                 <th>Invoice Number</th>
                 <th>Invoice Type</th>
                 <th>Priority</th>
                 <th>Staff Note</th>
+                <th>Requested by</th>
                 <th>
                     <a href="?<?php echo http_build_query(array_merge($_GET, ['sort' => $sort_order === 'DESC' ? 'ASC' : 'DESC'])); ?>">
                         Date Submitted <?php echo $sort_icon; ?>
@@ -90,7 +91,7 @@ $result = $conn->query($query);
             </thead>
             <tbody>
             <?php while ($row = $result->fetch_assoc()): ?>
-                <tr style="font-size: 0.85em">
+                <tr style="font-size: 0.8em; vertical-align: middle;" >
                     <td>
                         <?php if ($row['approval_status'] == 'Pending'): ?>
                             <span class="badge bg-warning text-dark">Pending</span>
@@ -104,11 +105,15 @@ $result = $conn->query($query);
                     <td><?php echo htmlspecialchars($row['invoice_type']); ?></td>
                     <td><?php echo htmlspecialchars($row['priority']); ?></td>
                     <td><?php echo htmlspecialchars($row['notes']); ?></td>
+                    <td><?php echo htmlspecialchars($row['staff_id']); ?></td>
                     <td><?php echo date("Y-m-d H:i", strtotime($row['date_requested'])); ?></td>
                     <td><?php echo htmlspecialchars($row['review_notes']); ?></td>
                     <td><?php echo htmlspecialchars($row['admin_reviewer_name']); ?></td>
                     <td>
-                        <a href="review_invoice.php?id=<?php echo $row['id']; ?>" class="btn btn-primary btn-sm">Review</a>
+                        <a href="review_invoice.php?id=<?php echo $row['id']; ?>" class="btn btn-primary btn-sm" style="width: 100%">Review</a>
+                        <a href="generate_report.php?id=<?php echo $row['id']; ?>" class="btn btn-success btn-sm" style="margin-top:2px;width: 100%">Download PDF Report</a>
+
+
                     </td>
                 </tr>
             <?php endwhile; ?>

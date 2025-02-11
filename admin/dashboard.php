@@ -24,7 +24,7 @@ $total_count = $conn->query("SELECT COUNT(*) as count FROM invoice_list")->fetch
         <div class="container mt-4">
             <h1>Dashboard</h1>
             <p>This is your admin dashboard. Below are the counts for tax invoice records and pending requests.</p>
-
+            <hr>
             <!-- Dashboard Tiles -->
             <div class="row">
                 <div class="col-md-3">
@@ -63,10 +63,12 @@ $total_count = $conn->query("SELECT COUNT(*) as count FROM invoice_list")->fetch
 
             <!-- Pending Invoices Table -->
             <h2 class="mt-4">Pending Tax Invoice Requests</h2>
+            <span>Ordered from Oldest to Newest to always review Tax Invoices that has been submitted first</span>
+            <hr>
             <table class="table table-bordered">
-                <thead>
+                <thead style="background-color: #335E53; color: #f8f9fa">
                 <tr>
-                    <th>#</th>
+                    <th>TX ID</th>
                     <th>Invoice Number</th>
                     <th>Invoice Type</th>
                     <th>Priority</th>
@@ -84,7 +86,7 @@ $total_count = $conn->query("SELECT COUNT(*) as count FROM invoice_list")->fetch
                             <td><?php echo $row['id']; ?></td>
                             <td><?php echo htmlspecialchars($row['tax_invoice_number']); ?></td>
                             <td><?php echo htmlspecialchars($row['invoice_type']); ?></td>
-                            <td><?php echo htmlspecialchars($row['priority']); ?></td>
+                            <td><i class="fa-solid fa-circle-exclamation"></i> <?php echo htmlspecialchars($row['priority']); ?></td>
                             <td><?php echo date("Y-m-d H:i", strtotime($row['date_requested'])); ?></td>
                             <td>
                                 <a href="review_invoice.php?id=<?php echo $row['id']; ?>" class="btn btn-primary btn-sm">Review</a>

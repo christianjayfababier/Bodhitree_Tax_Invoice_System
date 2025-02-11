@@ -76,3 +76,8 @@ html, body {
     background-color: #f8f9fa; /* Light background for content */
     box-sizing: border-box; /* Include padding in width/height calculations */
 }
+
+/* Ensure vertical alignment of table cells */
+table.table td, table.table th {
+    vertical-align: middle;
+}
