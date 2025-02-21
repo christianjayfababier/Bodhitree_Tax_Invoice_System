@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="content">
     <div class="container mt-4">
-        <h1>Register Staff</h1>
+        <h1>Register Admin/Manager</h1>
 
         <?php if (!empty($error_message)): ?>
             <div class="alert alert-danger"><?php echo $error_message; ?></div>
@@ -78,7 +78,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="mb-3">
                 <label for="role" class="form-label">Role</label>
                 <select class="form-select" id="role" name="role" required>
-                    <option value="staff">Admin</option>
+                    <option value="admin">Admin</option>
+                    <option value="master">Master</option>
+                    <option value="payments">Payments</option>
+                    <option value="accounting">Accounting Manager</option>
+                    <option value="manager">Manager</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-success">Register</button>

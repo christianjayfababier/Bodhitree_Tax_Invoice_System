@@ -27,8 +27,8 @@ $current_page = "approved_requests"; // Highlight the active menu
             <h1>Approved Invoices</h1>
             <?php if (!empty($invoices)): ?>
                 <table class="table table-bordered">
-                    <thead>
-                    <tr>
+                    <thead style="background-color: #335E53; color: #f8f9fa">
+                    <tr style="font-size: 0.85em; vertical-align: middle;">
                         <th>TX ID</th>
                         <th>Status</th>
                         <th>Invoice Number</th>

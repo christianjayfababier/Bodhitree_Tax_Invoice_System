@@ -74,11 +74,12 @@ $result = $conn->query($query);
             <tr style="font-size: 0.85em; vertical-align: middle;">
 
                 <th>Status</th>
+                <th>Priority</th>
                 <th>Invoice Number</th>
                 <th>Invoice Type</th>
-                <th>Priority</th>
-                <th>Staff Note</th>
-                <th>Requested by</th>
+                <th>Invoice Class</th>
+                <th>Property Reference</th>
+                <th>Payment Responsible</th>
                 <th>
                     <a href="?<?php echo http_build_query(array_merge($_GET, ['sort' => $sort_order === 'DESC' ? 'ASC' : 'DESC'])); ?>">
                         Date Submitted <?php echo $sort_icon; ?>
@@ -86,7 +87,7 @@ $result = $conn->query($query);
                 </th>
                 <th>Admins Remark</th>
                 <th>Signed Admin</th>
-                <th>Actions</th>
+
             </tr>
             </thead>
             <tbody>
@@ -95,26 +96,28 @@ $result = $conn->query($query);
                     <td>
                         <?php if ($row['approval_status'] == 'Pending'): ?>
                             <span class="badge bg-warning text-dark">Pending</span>
+                        <?php elseif ($row['approval_status'] == 'MT Approval'): ?>
+                            <span class="badge text-white" style="background-color: #335E53;">For MT Approval</span>
                         <?php elseif ($row['approval_status'] == 'Approved'): ?>
                             <span class="badge bg-success">Approved</span>
+                        <?php elseif ($row['approval_status'] == 'Lodge Payment'): ?>
+                            <span class="badge bg-secondary">Lodge Payment</span>
+                        <?php elseif ($row['approval_status'] == 'Payment Lodged'): ?>
+                            <span class="badge bg-info text-dark">For Final Approval</span>
                         <?php elseif ($row['approval_status'] == 'Denied'): ?>
                             <span class="badge bg-danger">Denied</span>
                         <?php endif; ?>
                     </td>
+                    <td><b><u><i><?php echo htmlspecialchars($row['priority']); ?></i></u></b></td>
                     <td><?php echo htmlspecialchars($row['tax_invoice_number']); ?></td>
                     <td><?php echo htmlspecialchars($row['invoice_type']); ?></td>
-                    <td><?php echo htmlspecialchars($row['priority']); ?></td>
-                    <td><?php echo htmlspecialchars($row['notes']); ?></td>
-                    <td><?php echo htmlspecialchars($row['staff_id']); ?></td>
-                    <td><?php echo date("Y-m-d H:i", strtotime($row['date_requested'])); ?></td>
+                    <td><?php echo htmlspecialchars($row['invoice_class']); ?></td>
+                    <td><?php echo htmlspecialchars($row['property_reference']); ?></td>
+                    <td><?php echo htmlspecialchars($row['payor']); ?></td>
+                    <td><?php echo date("d-m-Y H:i", strtotime($row['date_requested'])); ?></td>
                     <td><?php echo htmlspecialchars($row['review_notes']); ?></td>
                     <td><?php echo htmlspecialchars($row['admin_reviewer_name']); ?></td>
-                    <td>
-                        <a href="review_invoice.php?id=<?php echo $row['id']; ?>" class="btn btn-primary btn-sm" style="width: 100%">Review</a>
-                        <a href="generate_report.php?id=<?php echo $row['id']; ?>" class="btn btn-success btn-sm" style="margin-top:2px;width: 100%">Download PDF Report</a>
 
-
-                    </td>
                 </tr>
             <?php endwhile; ?>
             </tbody>

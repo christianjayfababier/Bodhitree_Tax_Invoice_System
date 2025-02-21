@@ -2,7 +2,7 @@
 // Get the current page name (e.g., "dashboard.php")
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
-<div class="topbar">
+<div class="topbar" style="z-index: 99!important;">
 
     <!-- Logo and System Title -->
     <div style="flex-grow: 1; display: flex; align-items: center;">

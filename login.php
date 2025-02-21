@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
 
     // Query to check user credentials
-    $stmt = $conn->prepare("SELECT id, username, role FROM users WHERE username = ? AND password = md5(?)");
+    $stmt = $conn->prepare("SELECT id, username, firstname, role FROM users WHERE username = ? AND password = md5(?)");
     $stmt->bind_param("ss", $username, $password);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -24,11 +24,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Store user data in session
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
+        $_SESSION['firstname'] = $user['firstname'];
         $_SESSION['role'] = $user['role'];
 
         // Redirect based on role
         if ($user['role'] == 'admin') {
             header("Location: admin/dashboard.php");
+        } elseif ($user['role'] == 'manager') {
+            header("Location: manager/dashboard.php");
+        } elseif ($user['role'] == 'master') {
+            header("Location: master/dashboard.php");
+        } elseif ($user['role'] == 'payments') {
+            header("Location: payments/dashboard.php");
+        } elseif ($user['role'] == 'accounting') {
+            header("Location: accounting/dashboard.php");
         } else {
             header("Location: staff/dashboard.php");
         }

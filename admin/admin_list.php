@@ -5,11 +5,11 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
     exit;
 }
 
-$pageTitle = "Staff List";
+$pageTitle = "Admin/Manager List";
 require_once '../config.php';
 
-// Fetch all staff accounts
-$result = $conn->query("SELECT * FROM users WHERE role = 'admin'");
+// Fetch all admin/manager accounts
+$result = $conn->query("SELECT * FROM users WHERE role IN ('admin', 'manager', 'master', 'payments', 'accounting')");
 ?>
 
 <?php include 'includes/head.php'; ?>
@@ -17,10 +17,10 @@ $result = $conn->query("SELECT * FROM users WHERE role = 'admin'");
 
     <div class="content">
         <div class="container mt-4">
-            <h1>Admin List</h1>
+            <h1>Admin/Manager List</h1>
             <p>Manage all admin accounts below.</p>
 
-            <a href="add_admin.php" class="btn btn-primary mb-3">Add New Admin</a>
+            <a href="add_admin.php" class="btn btn-primary mb-3">Add New Admin/Manager</a>
 
             <table class="table table-bordered">
                 <thead style="background-color: #335E53; color: #f8f9fa">
@@ -30,6 +30,7 @@ $result = $conn->query("SELECT * FROM users WHERE role = 'admin'");
                     <th>Name</th>
                     <th>Email</th>
                     <th>Date Created</th>
+                    <th>Role</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -41,6 +42,7 @@ $result = $conn->query("SELECT * FROM users WHERE role = 'admin'");
                         <td><?php echo htmlspecialchars($row['firstname'] ); ?> <?php echo htmlspecialchars($row['lastname'] ); ?></td>
                         <td><?php echo htmlspecialchars($row['email']); ?></td>
                         <td><?php echo date("Y-m-d", strtotime($row['created_at'])); ?></td>
+                        <td><?php echo htmlspecialchars($row['role']); ?></td>
                         <td>
                             <a href="edit_admin.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
                             <a href="delete_admin.php?id=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>

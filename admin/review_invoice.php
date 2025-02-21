@@ -37,88 +37,174 @@ if (!$invoice) {
 <?php include 'includes/head.php'; ?>
 <?php include 'includes/header.php'; ?>
 
-    <div class="content">
-        <div class="container mt-4">
-            <h1>Review Invoice</h1>
+<style>
+    /* Ensure the right sidebar sticks properly */
+    .sticky-admin-bar {
+        position: sticky;
+        top: 80px; /* Adjust based on navbar height */
+        height: fit-content; /* Ensures it does not expand unnecessarily */
+        max-height: calc(100vh - 100px); /* Prevents it from exceeding viewport */
+        overflow-y: auto; /* Enables scrolling inside if needed */
+        background-color: white; /* Keeps it visible */
+        z-index: 10; /* Ensures it stays below navbar */
+        padding: 15px;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
 
-            <?php if (!empty($_SESSION['error'])): ?>
-                <div class="alert alert-danger"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
-            <?php endif; ?>
+</style>
 
-            <?php if (!empty($_SESSION['success'])): ?>
-                <div class="alert alert-success"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
-            <?php endif; ?>
+<div class="content" >
+    <div class="container mt-4">
+        <h1>Review Invoice</h1>
 
-            <form method="POST" action="../controller/update_invoice_status.php">
-                <input type="hidden" name="invoice_id" value="<?php echo $invoice['id']; ?>">
+        <?php if (!empty($_SESSION['error'])): ?>
+            <div class="alert alert-danger"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
+        <?php endif; ?>
 
-                <div class="mb-3">
-                    <label for="taxInvoiceNumber" class="form-label">Tax Invoice Number</label>
-                    <input type="text" class="form-control" id="taxInvoiceNumber" value="<?php echo htmlspecialchars($invoice['tax_invoice_number']); ?>" readonly>
+        <?php if (!empty($_SESSION['success'])): ?>
+            <div class="alert alert-success"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
+        <?php endif; ?>
+
+        <div class="row" >
+            <!-- Left Side - Invoice Details -->
+            <div class="col-md-8" >
+                <div class="card p-3" ">
+                <h5>Invoice Details</h5>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label class="form-label">Tax Invoice Number</label>
+                            <input type="text" class="form-control" value="<?php echo htmlspecialchars($invoice['tax_invoice_number']); ?>" readonly>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                            <label class="form-label">Priority</label>
+                            <input type="text" class="form-control" value="<?php echo htmlspecialchars($invoice['priority']); ?>" readonly>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="mb-3">
-                    <label for="invoiceType" class="form-label">Invoice Type</label>
-                    <input type="text" class="form-control" id="invoiceType" value="<?php echo htmlspecialchars($invoice['invoice_type']); ?>" readonly>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label class="form-label">Category</label>
+                            <input type="text" class="form-control" value="<?php echo htmlspecialchars($invoice['invoice_type']); ?>" readonly>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                            <label class="form-label">Invoice Class</label>
+                            <input type="text" class="form-control" value="<?php echo htmlspecialchars($invoice['invoice_class']); ?>" readonly>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="mb-3">
-                    <label for="priority" class="form-label">Priority</label>
-                    <input type="text" class="form-control" id="priority" value="<?php echo htmlspecialchars($invoice['priority']); ?>" readonly>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label class="form-label">Property Reference</label>
+                            <input type="text" class="form-control" value="<?php echo htmlspecialchars($invoice['property_reference']); ?>" readonly>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="mb-3">
-                    <label for="priority" class="form-label">Uploader Note</label>
-                    <input type="text" class="form-control" id="priority" value="<?php echo htmlspecialchars($invoice['notes']); ?>" readonly>
-                </div>
-
-                <div class="mb-3">
-                    <label for="requestedBy" class="form-label">Requested By</label>
-                    <input type="text" class="form-control" id="requestedBy" value="<?php echo htmlspecialchars($invoice['staff_name'] ?? 'Unknown'); ?>" readonly>
-                </div>
-
-                <hr style="color: #335E53;">
-
-                <div class="mb-3">
-                    <label for="approvalStatus" class="form-label"><b>Status</b></label>
-                    <select name="approval_status" id="approvalStatus" class="form-select">
-                        <option value="Pending" <?php echo $invoice['approval_status'] === 'Pending' ? 'selected' : ''; ?>>Pending</option>
-                        <option value="Approved" <?php echo $invoice['approval_status'] === 'Approved' ? 'selected' : ''; ?>>Approved</option>
-                        <option value="Denied" <?php echo $invoice['approval_status'] === 'Denied' ? 'selected' : ''; ?>>Denied</option>
-                        <option value="Further Review" <?php echo $invoice['approval_status'] === 'Further Review' ? 'selected' : ''; ?>>Further Review</option>
-                        <option value="Cancelled" <?php echo $invoice['approval_status'] === 'Cancelled' ? 'selected' : ''; ?>>Cancelled</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="reviewNotes" class="form-label"><b>Admin Note</b></label>
-                    <textarea name="review_notes" id="reviewNotes" class="form-control" rows="5"><?php echo htmlspecialchars($invoice['review_notes']); ?></textarea>
-                </div>
-
-                <?php if (!empty($invoice['admin_reviewer_name']) && $invoice['approval_status'] !== 'Pending'): ?>
-                    <div class="mb-3">
-                        <label for="verifiedBy" class="form-label"><b>Verified By (Admin)</b></label>
-                        <input type="text" class="form-control" id="verifiedBy" value="<?php echo htmlspecialchars($invoice['admin_reviewer_name']); ?>" readonly>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label class="form-label">Payment Status</label>
+                            <input type="text" class="form-control" value="<?php echo htmlspecialchars($invoice['payment_status']); ?>" readonly>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                            <label class="form-label">Amount</label>
+                            <input type="text" class="form-control" value="<?php echo htmlspecialchars($invoice['amount']); ?>" readonly>
+                        </div>
                     </div>
                     <div class="mb-3">
-                        <label for="dateReviewed" class="form-label"><b>Date Reviewed</b></label>
-                        <input type="text" class="form-control" id="dateReviewed" value="<?php echo htmlspecialchars($invoice['date_updated']); ?>" readonly>
+                        <label class="form-label">Uploader Note</label>
+                        <textarea class="form-control" rows="5" readonly><?php echo htmlspecialchars($invoice['notes']); ?></textarea>
                     </div>
-                <?php endif; ?>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label class="form-label">Requested By</label>
+                                <input type="text" class="form-control" value="<?php echo htmlspecialchars($invoice['staff_name'] ?? 'Unknown'); ?>" readonly>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="mb-3">
+                                <label class="form-label">Date Requested</label>
+                                <input type="text" class="form-control" value="<?php echo htmlspecialchars($invoice['date_requested'] ?? 'Unknown'); ?>" readonly>
+                            </div>
+                        </div>
 
-                <div class="mb-3">
-                    <label for="pdfInvoice" class="form-label">PDF Invoice</label>
-                    <?php if (!empty($invoice['pdf_invoice_path'])): ?>
-                        <embed src="../dist/invoices/<?php echo htmlspecialchars($invoice['pdf_invoice_path']); ?>" type="application/pdf" width="100%" height="500px">
-                    <?php else: ?>
-                        <p class="text-danger">No PDF uploaded.</p>
-                    <?php endif; ?>
+                        <div class="mb-3">
+                            <label class="form-label">PDF Invoice</label>
+                            <?php if (!empty($invoice['pdf_invoice_path'])): ?>
+                                <embed src="../dist/invoices/<?php echo htmlspecialchars($invoice['pdf_invoice_path']); ?>" type="application/pdf" width="100%" height="800px">
+                            <?php else: ?>
+                                <p class="text-danger">No PDF uploaded.</p>
+                            <?php endif; ?>
+                        </div>
+                </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Review Form -->
+            <div class="col-md-4" >
+                <div class="card p-3 sticky-admin-bar" style="background-color: #335E53; color: #f8f9fa">
+                    <h5>Review Invoice</h5>
+                    <hr>
+                    <form method="POST" action="../controller/update_invoice_status.php">
+                        <input type="hidden" name="invoice_id" value="<?php echo $invoice['id']; ?>">
+
+                        <div class="mb-3">
+                            <label for="approvalStatus" class="form-label"><b>Status</b></label>
+                            <select name="approval_status" id="approvalStatus" class="form-select">
+                                <option value="" disabled selected>Select</option>
+                                <option value="Lodge Payment" <?php echo $invoice['approval_status'] === 'Lodge Payment' ? 'selected' : ''; ?>>Move to Lodge Payment</option>
+                                <option value="Denied" <?php echo $invoice['approval_status'] === 'Denied' ? 'selected' : ''; ?>>Deny</option>
+
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="payor" class="form-label"><b>Responsible for Payment</b></label>
+                            <select name="payor" id="payor" class="form-select">
+                                <option value="" disabled selected>Select</option>
+                                <option value="Owner" <?php echo $invoice['payor'] === 'Owner' ? 'selected' : ''; ?>>Owner</option>
+                                <option value="Guest" <?php echo $invoice['payor'] === 'Guest' ? 'selected' : ''; ?>>Guest</option>
+                                <option value="LTR Tenant" <?php echo $invoice['payor'] === 'LTR Tenant' ? 'selected' : ''; ?>>LTR Tenant</option>
+                                <option value="Company" <?php echo $invoice['payor'] === 'Company' ? 'selected' : ''; ?>>Company</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="reviewNotes" class="form-label"><b>Admin Note</b></label>
+                            <textarea name="review_notes" id="reviewNotes" class="form-control" rows="5"><?php echo htmlspecialchars($invoice['review_notes']); ?></textarea>
+                        </div>
+
+                        <?php if (!empty($invoice['admin_reviewer_name']) && $invoice['approval_status'] !== 'Pending'): ?>
+                            <div class="mb-3">
+                                <label for="verifiedBy" class="form-label"><b>Verified By Manager</b></label>
+                                <input type="text" class="form-control" id="verifiedBy" value="<?php echo htmlspecialchars($invoice['admin_reviewer_name']); ?>" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dateReviewed" class="form-label"><b>Date Reviewed</b></label>
+                                <input type="text" class="form-control" id="dateReviewed" value="<?php echo htmlspecialchars($invoice['manager_date']); ?>" readonly>
+                            </div>
+                        <?php endif; ?>
+
+                        <button type="submit" class="btn btn-success">Save Changes</button>
+                        <a href="request_list.php" class="btn btn-secondary">Cancel</a>
+                    </form>
                 </div>
 
-                <button type="submit" class="btn btn-success">Save Changes</button>
-                <a href="request_list.php" class="btn btn-secondary">Cancel</a>
-            </form>
+            </div>
         </div>
+
+
     </div>
+
 
 <?php include 'includes/footer.php'; ?>
